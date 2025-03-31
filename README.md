@@ -17,8 +17,9 @@ pip install requirements.txt
 Criar uma chave de API na alpha vantage e configurar .env
 ```cmd
 ALPHA_VANTAGE_API_KEY=your-api-key
+```
 
 Rodar projeto
-```
+```cmd
 uvicorn main:app --reload
 ```
