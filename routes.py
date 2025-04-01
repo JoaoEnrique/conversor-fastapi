@@ -1,12 +1,12 @@
 from asyncio import gather
 from fastapi import APIRouter, Path, Query
 from converter import sync_converter, async_converter
-from schamas import ConverterInput
+from schamas import ConverterInput, ConverterOutput
 
 router = APIRouter()
 
 # url?to_currency=USD,EUR,GBP&price=5.55
-@router.get("/converter/{from_currency}")
+@router.get("/converter/{from_currency}", response_model=ConverterOutput)
 def converter(
     from_currency: str = Path(max_length=3, regex="^[A-Z]{3}$"), 
     to_currencies: str = Query(max_length=50, regex="^[A-Z]{3}(,[A-Z]{3})*$"), 
@@ -25,9 +25,12 @@ def converter(
         
         result.append(response)
         
-    return result
+    return ConverterOutput(
+        message="success",
+        data=result
+    )
 
-@router.get("/async/converter/{from_currency}")
+@router.get("/async/converter/{from_currency}", response_model=ConverterOutput)
 async def async_converter_router(
     from_currency: str = Path(max_length=3, regex="^[A-Z]{3}$"), 
     to_currencies: str = Query(max_length=50, regex="^[A-Z]{3}(,[A-Z]{3})*$"), 
@@ -47,10 +50,13 @@ async def async_converter_router(
         coroutines.append(coro)
         
     result = await gather(*coroutines)
-    return result
+    return ConverterOutput(
+        message="success",
+        data=result
+    )
 
 
-@router.get("/v2/converter/{from_currency}")
+@router.get("/v2/converter/{from_currency}", response_model=ConverterOutput)
 def converter(
     body: ConverterInput,
     from_currency: str = Path(max_length=3, regex="^[A-Z]{3}$"),
@@ -68,10 +74,13 @@ def converter(
         
         result.append(response)
         
-    return result
+    return ConverterOutput(
+        message="success",
+        data=result
+    )
 
 
-@router.get("/v2/async/converter/{from_currency}")
+@router.get("/v2/async/converter/{from_currency}", response_model=ConverterOutput)
 def converter(
     body: ConverterInput,
     from_currency: str = Path(max_length=3, regex="^[A-Z]{3}$"),
@@ -89,4 +98,7 @@ def converter(
         
         result.append(response)
         
-    return result
+    return ConverterOutput(
+        message="success",
+        data=result
+    )

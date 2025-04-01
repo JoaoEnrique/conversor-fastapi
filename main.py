@@ -5,6 +5,6 @@ app = FastAPI()
 
 app.include_router(router)
 
-@app.get("/hello-world")
+@app.get("/")
 def hello_world():
-    return "hello_world"
+    return "Ola Mundo"
